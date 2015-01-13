@@ -20,14 +20,21 @@ public class ClientEndPoint {
 	private String username;
 	private MessageArea msgArea;
 	
-	public ClientEndPoint(String username, MessageArea msgArea) 
+	public ClientEndPoint(MessageArea msgArea) 
 			throws URISyntaxException, DeploymentException, IOException 
 	{
-		this.username = username;
 		this.msgArea = msgArea;
 		URI uri = new URI("ws://localhost:8080/FSEServer/chatRoomServerEndpoint");
 		ContainerProvider.getWebSocketContainer().connectToServer(this, uri);
-		sendMsg(username);
+	}
+	
+	public void connect(String username) {
+		this.username = username;
+		try {
+			sendMsg(username);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public String getUsername() {
@@ -49,6 +56,7 @@ public class ClientEndPoint {
 					sender.equals(this.username));
 			
 			this.msgArea.repaint();
+			this.msgArea.validate();
 		} catch (Exception e) {
 			// Do Nothing!
 		}

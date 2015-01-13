@@ -6,11 +6,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 
 public class MessageArea extends JPanel {
 	private static final long serialVersionUID = 4537964569040609842L;
@@ -21,62 +22,65 @@ public class MessageArea extends JPanel {
 	private static final Font usernameFont = new Font("serif", Font.BOLD, 14);
 	private static final Font dateFont = new Font("serif", Font.PLAIN, 9);
 	private static final Color BKGD_COLOR = new Color(181, 228, 240);
+	private static final int MSG_SPACING = 3;
 	
 	public MessageArea() {
 		super();
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.setBackground(BKGD_COLOR);
 	}
 	
 	public void addMsg(String username, String msg, boolean userMsg) {
 		if (username == null || msg == null) return;
 		
+		Color msgColor = userMsg ? USER_COLOR : OTHER_COLOR;
+		
 		JPanel msgPanel = new JPanel();
-		msgPanel.setBackground(userMsg ? USER_COLOR : OTHER_COLOR);
+		msgPanel.setBackground(msgColor);
 		msgPanel.setLayout(new GridBagLayout());
 		msgPanel.setBorder(BorderFactory.createMatteBorder(
-                3, 3, 3, 3, BKGD_COLOR));
-		
-		JTextArea msgBox = new JTextArea(msg);
-		msgBox.setEditable(false);
-		msgBox.setLineWrap(true);
-		msgBox.setWrapStyleWord(true);
+                MSG_SPACING, MSG_SPACING, MSG_SPACING, MSG_SPACING, BKGD_COLOR));
 		
 		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.anchor = GridBagConstraints.EAST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.weighty = 0;
-		gbc.weightx = 0;
 		gbc.gridheight = 1;
 		gbc.gridwidth = 1;
+		gbc.weightx = 0.5;
+		gbc.weighty = 0;
 		
 		// Add username to message
-		JTextArea usernameField = new JTextArea(username + "    ");
-		usernameField.setBackground(userMsg ? USER_COLOR : OTHER_COLOR);
+		JLabel usernameField = new JLabel(username + "    ");
+		usernameField.setBackground(msgColor);
 		usernameField.setFont(usernameFont);
-		usernameField.setEditable(false);
+		usernameField.setBorder(BorderFactory.createMatteBorder(
+                MSG_SPACING, MSG_SPACING, 0, 0, msgColor));
 		msgPanel.add(usernameField, gbc);
 		
 		// Add timestamp to message
 		gbc.gridx = 1;
-		JTextArea date = new JTextArea(formatter.format(new Date()));
-		date.setBackground(userMsg ? USER_COLOR : OTHER_COLOR);
+		JLabel date = new JLabel(formatter.format(new Date()));
+		date.setBackground(msgColor);
+		date.setHorizontalAlignment(SwingConstants.RIGHT);
 		date.setFont(dateFont);
-		date.setEditable(false);
+		date.setBorder(BorderFactory.createMatteBorder(
+                MSG_SPACING, 0, 0, MSG_SPACING, msgColor));
 		msgPanel.add(date, gbc);
 		
 		gbc.gridx = 0;
 		gbc.gridwidth = 2;
 		gbc.gridy = 1;
-		if (userMsg) {
-			msgBox.setBackground(USER_COLOR);
-			msgPanel.add(msgBox, gbc);
-		} else {
-			msgBox.setBackground(OTHER_COLOR);
-			msgPanel.add(msgBox, gbc);
-		}
+		gbc.weightx = 1;
+		JTextArea msgBox = new JTextArea(msg);
+		msgBox.setEditable(false);
+		msgBox.setLineWrap(true);
+		msgBox.setWrapStyleWord(true);
+		msgBox.setBackground(msgColor);
+		msgBox.setBorder(BorderFactory.createMatteBorder(
+                0, MSG_SPACING, MSG_SPACING, MSG_SPACING, msgColor));
+		msgPanel.add(msgBox, gbc);
 		
 		this.add(msgPanel);
 	}
