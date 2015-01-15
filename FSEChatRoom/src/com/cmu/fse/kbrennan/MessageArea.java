@@ -7,7 +7,6 @@ import java.awt.GridBagLayout;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -20,15 +19,23 @@ public class MessageArea extends JPanel {
 	private static final Color OTHER_COLOR = new Color(255, 171, 79);
 	private static final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 	private static final Font usernameFont = new Font("serif", Font.BOLD, 14);
-	private static final Font dateFont = new Font("serif", Font.PLAIN, 9);
+	private static final Font dateFont = new Font("serif", Font.PLAIN, 10);
 	private static final Color BKGD_COLOR = new Color(181, 228, 240);
 	private static final int MSG_SPACING = 3;
+	private static int num_panels = 0;
+	private GridBagConstraints gbc_scroll;
 	
 	public MessageArea() {
 		super();
 		
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.setLayout(new GridBagLayout());
 		this.setBackground(BKGD_COLOR);
+		
+		this.gbc_scroll = new GridBagConstraints();
+		this.gbc_scroll.fill = GridBagConstraints.HORIZONTAL;
+		this.gbc_scroll.gridx = 0;
+		this.gbc_scroll.anchor = GridBagConstraints.NORTH;
+		this.gbc_scroll.weightx = 1.0;
 	}
 	
 	public void addMsg(String username, String msg, boolean userMsg) {
@@ -82,6 +89,8 @@ public class MessageArea extends JPanel {
                 0, MSG_SPACING, MSG_SPACING, MSG_SPACING, msgColor));
 		msgPanel.add(msgBox, gbc);
 		
-		this.add(msgPanel);
+		gbc_scroll.gridy = num_panels++;
+		
+		this.add(msgPanel, gbc_scroll);
 	}
 }
