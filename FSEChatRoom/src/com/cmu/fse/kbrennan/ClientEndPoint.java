@@ -17,8 +17,9 @@ import javax.websocket.DeploymentException;
 @ClientEndpoint
 public class ClientEndPoint {
 	private Session session;
-	private String username;
 	private MessageArea msgArea;
+	private int connected = 0;
+	private String username;
 	
 	public ClientEndPoint(MessageArea msgArea) 
 			throws URISyntaxException, DeploymentException, IOException 
@@ -28,42 +29,40 @@ public class ClientEndPoint {
 		ContainerProvider.getWebSocketContainer().connectToServer(this, uri);
 	}
 	
-	public void connect(String username) {
-		this.username = username;
-		try {
-			sendMsg(username);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public String getUsername() {
-		return this.username;
-	}
-	
 	@OnOpen
 	public void processOpen(Session session) {
 		this.session = session;
 	}
 	
 	@OnMessage
-	public void processMsg(String msg) {
+	public void processMsg(String jsonMsg) {
 		try {
-			JsonObject obj = Json.createReader(new StringReader(msg)).readObject();
+			JsonObject obj = Json.createReader(new StringReader(jsonMsg)).readObject();
 			String sender = obj.getString("username");
+			String msg = obj.getString("message");
 			
-			msgArea.addMsg(sender, obj.getString("message"), 
-					sender.equals(this.username));
+			if (sender.equalsIgnoreCase("System")) {
+				System.out.println(msg);
+				if (connected == 0) {
+					if (!msg.startsWith("you")) {
+						connected = -1;
+						return;
+					} else {
+						System.out.println(msg.substring(25, msg.length()));
+						this.username = msg.substring(25, msg.length());
+						connected = 1;
+					}
+				}
+			} else {
+				msgArea.addMsg(sender, msg, obj.getString("timestamp"),
+						sender.equals(this.username));
+			}
 			
 			this.msgArea.repaint();
 			this.msgArea.validate();
 		} catch (Exception e) {
 			// Do Nothing!
 		}
-	}
-	
-	public void sendMsg(String msg) throws IOException {
-		this.session.getBasicRemote().sendText(msg);
 	}
 	
 	@OnClose
@@ -73,5 +72,13 @@ public class ClientEndPoint {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void sendMsg(String msg) throws IOException {
+		this.session.getBasicRemote().sendText(msg);
+	}
+	
+	public int isConnected() {
+		return connected;
 	}
 }

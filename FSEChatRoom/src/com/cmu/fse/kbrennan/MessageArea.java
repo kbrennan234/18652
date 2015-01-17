@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,7 +15,6 @@ public class MessageArea extends JPanel {
 
 	private static final Color USER_COLOR = new Color(146, 251, 83);
 	private static final Color OTHER_COLOR = new Color(255, 171, 79);
-	private static final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 	private static final Font usernameFont = new Font("serif", Font.BOLD, 14);
 	private static final Font dateFont = new Font("serif", Font.PLAIN, 10);
 	private static final Color BKGD_COLOR = new Color(181, 228, 240);
@@ -38,7 +35,7 @@ public class MessageArea extends JPanel {
 		this.gbc_scroll.weightx = 1.0;
 	}
 	
-	public void addMsg(String username, String msg, boolean userMsg) {
+	public void addMsg(String username, String msg, String timestamp, boolean userMsg) {
 		if (username == null || msg == null) return;
 		
 		Color msgColor = userMsg ? USER_COLOR : OTHER_COLOR;
@@ -68,7 +65,7 @@ public class MessageArea extends JPanel {
 		
 		// Add timestamp to message
 		gbc.gridx = 1;
-		JLabel date = new JLabel(formatter.format(new Date()));
+		JLabel date = new JLabel(timestamp);
 		date.setBackground(msgColor);
 		date.setHorizontalAlignment(SwingConstants.RIGHT);
 		date.setFont(dateFont);
