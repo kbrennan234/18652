@@ -1,29 +1,48 @@
 package com.cmu.fse.kbrennan;
 
 import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class LoginScreen extends JPanel {
 	private static final long serialVersionUID = 5536679200420437586L;
 	
 	private static final Color BKGD_COLOR = new Color(181, 228, 240);
+	private static final Color CENTER_COLOR = new Color(102, 255, 51);
 	
 	private JTextField loginField;
 	private JButton submitBtn;
 	
 	public LoginScreen(ClientEndPoint endpoint) {
 		this.setBackground(BKGD_COLOR);
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.setLayout(new GridBagLayout());
 		
-		JLabel userMsg = new JLabel("Enter your Username");
-		this.add(userMsg);
+		JPanel centerPanel = new JPanel();
+		centerPanel.setLayout(new GridBagLayout());
+		centerPanel.setBackground(CENTER_COLOR);
 		
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.weightx = 1;
+		gbc.insets = new Insets(10, 25, 3, 25);
+		gbc.anchor = GridBagConstraints.CENTER;
+		
+		JLabel userMsg = new JLabel("Enter your Username:");
+		userMsg.setHorizontalAlignment(SwingConstants.CENTER);	
+		centerPanel.add(userMsg, gbc);
+		
+		gbc.gridy = 1;
+		gbc.insets = new Insets(3, 25, 3, 25);
 		loginField = new JTextField();
 		loginField.addActionListener(new ActionListener() {
 			@Override
@@ -31,8 +50,10 @@ public class LoginScreen extends JPanel {
 				submitUsername(endpoint);
 			}
 		});
-		this.add(loginField);
+		centerPanel.add(loginField, gbc);
 		
+		gbc.gridy = 2;
+		gbc.insets = new Insets(3, 25, 10, 25);
 		submitBtn = new JButton("Submit");
 		submitBtn.addActionListener(new ActionListener() {
 			@Override
@@ -40,7 +61,13 @@ public class LoginScreen extends JPanel {
 				submitUsername(endpoint);
 			}
 		});
-		this.add(submitBtn);
+		centerPanel.add(submitBtn, gbc);
+		
+		GridBagConstraints mainGbc = new GridBagConstraints();
+		mainGbc.fill = GridBagConstraints.NONE;
+		mainGbc.anchor = GridBagConstraints.CENTER;
+		mainGbc.weightx = 0.75;
+		this.add(centerPanel, mainGbc);
 	}
 	
 	private void submitUsername(ClientEndPoint endpoint) {
