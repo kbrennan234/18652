@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>FSE-Chatroom</title>
+	<link rel="stylesheet" href="css/style.css" media="screen" type="text/css" />
+</head>
+<body>
+	<div class="header-box">FSE-Chatroom</div>
+	<br>
+	<div class="login-wrapper" id="login_screen">
+		<h1>Login</h1><br>
+		<form>
+			<input class="login-username" placeholder="Username" id="user"/>
+			<button class="login-button" id="login" onclick="sendMessage();">Login</button>
+		</form>
+	</div>
+	<div class="message-wrapper" id="wrapper">
+		<div id="message_pane" class="message-area"></div>
+		<table style="width:100%">
+			<tr>
+				<td><input type="text" id="user_text" readonly="readonly"/></td>
+				<td><button type="button" id="user_send" onclick="sendMessage();" disabled>Send</button></td>
+			</tr>
+		</table>
+	</div>
+	<script src="js/socket.js"></script>
+</body>	
+</html>

@@ -42,13 +42,11 @@ public class ClientEndPoint {
 			String msg = obj.getString("message");
 			
 			if (sender.equalsIgnoreCase("System")) {
-				System.out.println(msg);
 				if (connected == 0) {
 					if (!msg.startsWith("you")) {
 						connected = -1;
 						return;
 					} else {
-						System.out.println(msg.substring(25, msg.length()));
 						this.username = msg.substring(25, msg.length());
 						connected = 1;
 					}

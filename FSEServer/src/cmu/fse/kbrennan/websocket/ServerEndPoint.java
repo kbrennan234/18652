@@ -3,6 +3,7 @@ package cmu.fse.kbrennan.websocket;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonWriter;
@@ -22,8 +24,8 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint(value = "/chatRoomServerEndpoint")
 public class ServerEndPoint {
 	private static Set<Session> users = Collections.synchronizedSet(new HashSet<Session>());
-	private static Set<String> messages = Collections.synchronizedSet(new HashSet<String>());
-	private static final int LIMIT = 10;
+	private static List<String> messages = Collections.synchronizedList(new ArrayList<String>());
+	private static final int LIMIT = 50;
 	private static final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 	private static final List<String> RESERVED = Arrays.asList("System");
 	
