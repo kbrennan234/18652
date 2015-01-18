@@ -38,8 +38,6 @@ public class ServerEndPoint {
 		String username = (String)userSession.getUserProperties().get("username");
 		users.remove(userSession);
 		
-		System.out.println(username);
-		
 		if (username != null) {
 			String outMsg = new Message("System","disconnected" + username, formatter.format(new Date())).toString();
 			Iterator<Session> iterator = users.iterator();

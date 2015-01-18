@@ -21,7 +21,7 @@ webSocket.onmessage = function processMsg(message) {
 			if (msg_username.toLowerCase() == "System".toLowerCase()) {
 				addConnectMsg(date, msg);
 			} else if (msg_username == username) {
-				addMsg("Me", date, msg, "user-msg");
+				addMsg("Me" + " (" +username + ")", date, msg, "user-msg");
 			} else {
 				addMsg(msg_username, date, msg, "other-msg");
 			}
@@ -115,8 +115,15 @@ function addMsg(username, date, msg, msg_class) {
 }
 
 function enterChatRoom() {
-	document.getElementById("login_screen").remove();
+	var loginScreen = document.getElementById("login_screen");
+	while (loginScreen.firstChild) {
+	    loginScreen.removeChild(loginScreen.firstChild);
+	}
+	loginScreen.parentElement.removeChild(loginScreen);
+	
 	document.getElementById("wrapper").style.opacity = 1.0;
 	document.getElementById("user_text").removeAttribute("readonly");
 	document.getElementById("user_send").removeAttribute("disabled");
+	document.getElementById("logout_btn").style.visibility = "visible";
+	document.getElementById("logout_btn").removeAttribute("disabled");
 }

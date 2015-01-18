@@ -2,11 +2,14 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>FSE-Chatroom</title>
+	<title>FSE - Chat Room</title>
 	<link rel="stylesheet" href="css/style.css" media="screen" type="text/css" />
 </head>
 <body>
-	<div class="header-box">FSE-Chatroom</div>
+	<div class="header-box">
+		<span>FSE - Chat Room</span>
+		<button id="logout_btn" onclick="location.reload();" disabled>Logout</button>
+	</div>
 	<br>
 	<div class="login-wrapper" id="login_screen">
 		<h1>Login</h1><br>
@@ -20,7 +23,7 @@
 		<table style="width:100%">
 			<tr>
 				<td><input type="text" id="user_text" readonly="readonly"/></td>
-				<td><button type="button" id="user_send" onclick="sendMessage();" disabled>Send</button></td>
+				<td style="width: 95px;"><button type="button" id="user_send" onclick="sendMessage();" disabled>Send</button></td>
 			</tr>
 		</table>
 	</div>
