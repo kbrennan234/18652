@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonWriter;
@@ -36,7 +35,22 @@ public class ServerEndPoint {
 	
 	@OnClose
 	public void handleClose(Session userSession) {
+		String username = (String)userSession.getUserProperties().get("username");
 		users.remove(userSession);
+		
+		System.out.println(username);
+		
+		if (username != null) {
+			String outMsg = new Message("System","disconnected" + username, formatter.format(new Date())).toString();
+			Iterator<Session> iterator = users.iterator();
+			while (iterator.hasNext()) {
+				try {
+					iterator.next().getBasicRemote().sendText(outMsg);
+				} catch (IOException e) {
+					// Do Nothing!
+				}
+			}
+		}
 	}
 	
 	@OnMessage
@@ -80,10 +94,21 @@ public class ServerEndPoint {
 			userSession.getUserProperties().put("username", msg);
 			userSession.getBasicRemote().sendText(jsonMsg("System", "you are now connected as " + msg));
 			
-			// Send saved messages to new user
-			Iterator<String> msgIterator = messages.iterator();
-			while (msgIterator.hasNext()) {
-				userSession.getBasicRemote().sendText(msgIterator.next());
+			iterator = users.iterator();
+			String outMsg = new Message(
+					"System", "connected" + msg, formatter.format(new Date())).toString() + "\n";
+			while (iterator.hasNext()) {
+				Session tmp = iterator.next();
+				
+				if (tmp.equals(userSession)) {
+					// Send saved messages to new user
+					Iterator<String> msgIterator = messages.iterator();
+					while (msgIterator.hasNext()) {
+						userSession.getBasicRemote().sendText(msgIterator.next());
+					}
+				}
+				
+				tmp.getBasicRemote().sendText(outMsg);
 			}
 		}
 	}

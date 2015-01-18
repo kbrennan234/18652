@@ -19,7 +19,7 @@ webSocket.onmessage = function processMsg(message) {
 		} else if (username != null) {
 			var date = data.timestamp;
 			if (msg_username.toLowerCase() == "System".toLowerCase()) {
-				addConnectMsg(username, date, msg);
+				addConnectMsg(date, msg);
 			} else if (msg_username == username) {
 				addMsg("Me", date, msg, "user-msg");
 			} else {
@@ -64,19 +64,22 @@ document.getElementById("user_text").addEventListener('keypress', function (e) {
 });
 
 
-function addConnectMsg(username, date, msg) {
-	var connectMsg = document.createElement("span");
+function addConnectMsg(date, msg) {
+	var connectMsg = document.createElement("p");
 	connectMsg.setAttribute("class", "user-connect");
 	
-	if (msg.toLowerCase() == "connected") {
-		var message = document.createTextNode(username + " connected at " + date);
+	if (msg.substring(0,9) == "connected") {
+		var message = document.createTextNode(
+				msg.substring(9,msg.length) + " connected at " + date + "\n");
 		connectMsg.appendChild(message);
 		document.getElementById("message_pane").appendChild(connectMsg);
-	} else {
-		var message = document.createTextNode(username + " disconnected at " + date);
+	} else if (msg.substring(0,12) == "disconnected") {
+		var message = document.createTextNode(
+				msg.substring(12,msg.length) + " disconnected at " + date + "\n");
 		connectMsg.appendChild(message);
 		document.getElementById("message_pane").appendChild(connectMsg);
 	}
+	
 }
 
 function addMsg(username, date, msg, msg_class) {
